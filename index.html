@@ -114,7 +114,7 @@
       if (usarMaiusculas) chars += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
       if (usarMinusculas) chars += "abcdefghijklmnopqrstuvwxyz";
       if (usarNumeros) chars += "0123456789";
-      if (usarEspeciais) chars += "!@#$%^&*()-_=+[]{}<>?";
+      if (usarEspeciais) chars += `!"#$%&'()*+,-./:;<=>?@[\\]^_\`{|}~`;
 
       if (!chars) {
         alert("Selecione pelo menos um tipo de caractere.");
@@ -134,28 +134,30 @@
       }
 
       document.getElementById('saidaSenha').value = senha;
-      avaliarForcaSenha(senha);
+      avaliarForcaSenha(senha, chars.length);
     }
 
     function copiarSenha() {
       const senha = document.getElementById('saidaSenha');
       senha.select();
-      senha.setSelectionRange(0, 99999); // Para mobile
+      senha.setSelectionRange(0, 99999);
       document.execCommand("copy");
       alert("Senha copiada!");
     }
 
-    function avaliarForcaSenha(senha) {
+    function avaliarForcaSenha(senha, base) {
+      const bitsEntropia = Math.round(senha.length * Math.log2(base));
       let forca = "Fraca";
+
       if (senha.length >= 12 && /[A-Z]/.test(senha) && /[a-z]/.test(senha) && /\d/.test(senha) && /\W/.test(senha)) {
         forca = "Forte";
       } else if (senha.length >= 8 && /[A-Z]/.test(senha) && /[a-z]/.test(senha) && /\d/.test(senha)) {
         forca = "Média";
       }
-      document.getElementById("forcaSenha").textContent = "Força: " + forca;
+
+      document.getElementById("forcaSenha").textContent = `Força: ${forca} | Entropia: ${bitsEntropia} bits`;
     }
   </script>
 
 </body>
 </html>
-
