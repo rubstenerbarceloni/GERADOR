@@ -1,12 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <title>Gerador de Senhas Seguro</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- CSS embutido -->
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -64,6 +61,10 @@
       border: 1px solid #ccc;
       box-sizing: border-box;
     }
+    #forcaSenha {
+      margin-top: 8px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -84,10 +85,12 @@
   </div>
 
   <button onclick="gerarSenhaComHash()">Gerar Senha</button>
+  <button onclick="copiarSenha()">Copiar Senha</button>
+  <button onclick="window.close()">Sair</button>
 
   <textarea id="saidaSenha" rows="2" readonly placeholder="Senha gerada aparecerá aqui"></textarea>
+  <div id="forcaSenha">Força: -</div>
 
-  <!-- JavaScript -->
   <script>
     function gerarSenhaComHash() {
       const identificador = document.getElementById('identificador').value.trim();
@@ -131,8 +134,28 @@
       }
 
       document.getElementById('saidaSenha').value = senha;
+      avaliarForcaSenha(senha);
+    }
+
+    function copiarSenha() {
+      const senha = document.getElementById('saidaSenha');
+      senha.select();
+      senha.setSelectionRange(0, 99999); // Para mobile
+      document.execCommand("copy");
+      alert("Senha copiada!");
+    }
+
+    function avaliarForcaSenha(senha) {
+      let forca = "Fraca";
+      if (senha.length >= 12 && /[A-Z]/.test(senha) && /[a-z]/.test(senha) && /\d/.test(senha) && /\W/.test(senha)) {
+        forca = "Forte";
+      } else if (senha.length >= 8 && /[A-Z]/.test(senha) && /[a-z]/.test(senha) && /\d/.test(senha)) {
+        forca = "Média";
+      }
+      document.getElementById("forcaSenha").textContent = "Força: " + forca;
     }
   </script>
 
 </body>
 </html>
+
